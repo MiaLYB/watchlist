@@ -19,13 +19,20 @@ app=Flask(__name__)
 #@app.route('/home')
 #@app.route('/user/<name>')
 
+from flask import url_for
+@app.route('/test')
+def test_ur1_for():
+    return 'test page'
+
 @app.route('/')
 def index():
     return render_template('index.html',name=name,movies=movies)
-#def hello():
-#    return '<h1>Hello Totoro!</h1><img src="http://helloflask.com/totoro.gif">'
-#def user_page(name):
-#   return 'User:%s' % name
+@app.route('/hello')
+def hello():
+    return '<h1>Hello Totoro!</h1><img src="http://helloflask.com/totoro.gif">'
+@app.route('/user/<name>')
+def user_page(name):
+   return 'User:%s' % name
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
