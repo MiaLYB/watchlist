@@ -5,7 +5,7 @@
     {% for movieinfo in movies_information %}
     <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.country }} - {{ movieinfo.type }} - {{ movieinfo.year }}
         <span class="float-right">
-            <a class="imdb"href="https://www.imdb.com/find?q={{movieinfo.movie_name}}"target="_blank"title="Find this on IMDb">IMDb</a>
+           <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{movieinfo.movie_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
@@ -15,7 +15,7 @@
     {% for actor in actors %}
     <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.country }}
      <span class="float-right">
-            <a class="imdb"href="https://www.imdb.com/find?q={{actor.actor_name}}"target="_blank"title="Find this on IMDb">IMDb</a>
+            <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{actor.actor_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
