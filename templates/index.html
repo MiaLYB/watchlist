@@ -1,43 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ user.name }}'s Watchlist</title>
-    <link rel='icon' href="{{ url_for('static',filename='favicon.png') }}">
-    <link rel="stylesheet"href="{{ url_for('static',filename='style.css') }}"type="text/css">
-</head>
-<body>
-    <h2>
-        <img alt="Avatar" class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}">
-        {{ user.name }}'s Watchlist
-    </h2>
-    <p>{{ movies_information|length }} Movies' information</p>
-    <u1 class="movies_information-list">
-        {% for movieinfo in movies_information %}
-        <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.country }} - {{ movieinfo.type }} - {{ movieinfo.year }}</li>
-        {% endfor %}
-    </u1>
-    <p>{{ actors|length }} actors' information</p>
-    <u1 class="actors-list">
-        {% for actor in actors %}
-        <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.country }}</li>
-        {% endfor %}
-    </u1>
-    <p>{{ box|length }} Box records</p>
-    <u1 class="box-list">
-        {% for b in box %}
-        <li>{{ b.movie_id }} - {{ b.box }}</li>
-        {% endfor %}
-    </u1>
-    <p>{{ relation|length }} Movie_Actor_Relation information</p>
-    <u1 class="relation-list">
-        {% for r in relation %}
-        <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}</li>
-        {% endfor %}
-    </u1>
-    <img alt="Walking Totoro" class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}">
-    <footer>
-        <small>&copy;2018<a href="http://helloflask.com/tutorial">HelloFlask</a></small>
-    </footer>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<p>{{ movies_information|length }} Movies' information</p>
+<ul class="movies_information-list">
+    {% for movieinfo in movies_information %}
+    <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.country }} - {{ movieinfo.type }} - {{ movieinfo.year }}
+        <span class="float-right">
+            <a class="imdb"href="https://www.imdb.com/find?q={{movieinfo.movie_name}}"target="_blank"title="Find this on IMDb">IMDb</a>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<p>{{ actors|length }} actors' information</p>
+<ul class="actors-list">
+    {% for actor in actors %}
+    <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.country }}
+     <span class="float-right">
+            <a class="imdb"href="https://www.imdb.com/find?q={{actor.actor_name}}"target="_blank"title="Find this on IMDb">IMDb</a>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<p>{{ box|length }} Box records</p>
+<ul class="box-list">
+    {% for b in box %}
+    <li>{{ b.movie_id }} - {{ b.box }}</li>
+    {% endfor %}
+</ul>
+<p>{{ relation|length }} Movie_Actor_Relation information</p>
+<ul class="relation-list">
+    {% for r in relation %}
+    <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}</li>
+    {% endfor %}
+</ul>
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}"title="to~to~ro~">
+{% endblock %}

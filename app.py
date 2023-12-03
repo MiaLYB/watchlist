@@ -59,24 +59,24 @@ def forge():
     db.create_all()
     name='Mia L'
     movies_information=[
-        {'movie_id':1001,'movie_name':'战狼2','release_date':'2017-07-27','country':'中国','type':'战争','year':2017},
-        {'movie_id':1002,'movie_name':'哪吒之魔童降世','release_date':'2019-07-26','country':'中国','type':'动画','year':2019},
-        {'movie_id':1003,'movie_name':'流浪地球','release_date':'2019-02-05','country':'中国','type':'科幻','year':2019},
-        {'movie_id':1004,'movie_name':'复仇者联盟4','release_date':'2019-04-24','country':'美国','type':'科幻','year':2019},
-        {'movie_id':1005,'movie_name':'红海行动','release_date':'2018-02-16','country':'中国','type':'战争','year':2018},
-        {'movie_id':1006,'movie_name':'唐人街探案2','release_date':'2018-02-16','country':'中国','type':'喜剧','year':2018},
-        {'movie_id':1007,'movie_name':'我不是药神','release_date':'2018-07-05','country':'中国','type':'喜剧','year':2018},
-        {'movie_id':1008,'movie_name':'中国机长','release_date':'2019-09-30','country':'中国','type':'剧情','year':2019},
-        {'movie_id':1009,'movie_name':'速度与激情8','release_date':'2017-04-14','country':'美国','type':'动作','year':2017},
-        {'movie_id':1010,'movie_name':'西虹市首富','release_date':'2018-07-27','country':'中国','type':'喜剧','year':2018},
-        {'movie_id': 1011, 'movie_name': '复仇者联盟3', 'release_date': '2018-05-11', 'country': '美国', 'type': '科幻','year': 2018},
-        {'movie_id': 1012, 'movie_name': '捉妖记2', 'release_date': '2018-02-16', 'country': '中国', 'type': '喜剧','year': 2018},
-        {'movie_id': 1013, 'movie_name': '八佰', 'release_date': '2020-08-21', 'country': '中国', 'type': '战争','year': 2020},
-        {'movie_id': 1014, 'movie_name': '姜子牙', 'release_date': '2020-10-01', 'country': '中国', 'type': '动画','year': 2020},
-        {'movie_id': 1015, 'movie_name': '我和我的家乡', 'release_date': '2020-10-01', 'country': '中国', 'type': '剧情','year': 2020},
-        {'movie_id': 1016, 'movie_name': '你好，李焕英', 'release_date': '2021-02-12', 'country': '中国', 'type': '喜剧','year': 2021},
-        {'movie_id': 1017, 'movie_name': '长津湖', 'release_date': '2021-09-30', 'country': '中国', 'type': '战争','year': 2021},
-        {'movie_id': 1018, 'movie_name': '速度与激情9', 'release_date': '2021-05-21', 'country': '中国', 'type': '动作','year': 2021},
+        {'movie_id':1001,'movie_name':'战狼2','release_date':'2017/7/27','country':'中国','type':'战争','year':2017},
+        {'movie_id':1002,'movie_name':'哪吒之魔童降世','release_date':'2019/7/26','country':'中国','type':'动画','year':2019},
+        {'movie_id':1003,'movie_name':'流浪地球','release_date':'2019/2/5','country':'中国','type':'科幻','year':2019},
+        {'movie_id':1004,'movie_name':'复仇者联盟4','release_date':'2019/4/24','country':'美国','type':'科幻','year':2019},
+        {'movie_id':1005,'movie_name':'红海行动','release_date':'2018/2/16','country':'中国','type':'战争','year':2018},
+        {'movie_id':1006,'movie_name':'唐人街探案2','release_date':'2018/2/16','country':'中国','type':'喜剧','year':2018},
+        {'movie_id':1007,'movie_name':'我不是药神','release_date':'2018/7/05','country':'中国','type':'喜剧','year':2018},
+        {'movie_id':1008,'movie_name':'中国机长','release_date':'2019/9/30','country':'中国','type':'剧情','year':2019},
+        {'movie_id':1009,'movie_name':'速度与激情8','release_date':'2017/4/14','country':'美国','type':'动作','year':2017},
+        {'movie_id':1010,'movie_name':'西虹市首富','release_date':'2018/7/27','country':'中国','type':'喜剧','year':2018},
+        {'movie_id': 1011, 'movie_name': '复仇者联盟3', 'release_date': '2018/5/11', 'country': '美国', 'type': '科幻','year': 2018},
+        {'movie_id': 1012, 'movie_name': '捉妖记2', 'release_date': '2018/2/16', 'country': '中国', 'type': '喜剧','year': 2018},
+        {'movie_id': 1013, 'movie_name': '八佰', 'release_date': '2020/8/21', 'country': '中国', 'type': '战争','year': 2020},
+        {'movie_id': 1014, 'movie_name': '姜子牙', 'release_date': '2020/10/01', 'country': '中国', 'type': '动画','year': 2020},
+        {'movie_id': 1015, 'movie_name': '我和我的家乡', 'release_date': '2020/10/01', 'country': '中国', 'type': '剧情','year': 2020},
+        {'movie_id': 1016, 'movie_name': '你好，李焕英', 'release_date': '2021/2/12', 'country': '中国', 'type': '喜剧','year': 2021},
+        {'movie_id': 1017, 'movie_name': '长津湖', 'release_date': '2021/9/30', 'country': '中国', 'type': '战争','year': 2021},
+        {'movie_id': 1018, 'movie_name': '速度与激情9', 'release_date': '2021/5/21', 'country': '中国', 'type': '动作','year': 2021},
     ]
     actors=[{'actor_id':2001,'actor_name':'吴京','gender':'男','country':'中国'},
             {'actor_id':2002,'actor_name':'饺子','gender':'男','country':'中国'},
@@ -212,7 +212,7 @@ def forge():
 
 import click
 @app.cli.command()
-@click.option('--drop',is_flag=True,help='Create after drop.')
+@click.option('/drop',is_flag=True,help='Create after drop.')
 def initdb(drop):
     """Initialize the database."""
     if drop:
@@ -220,6 +220,13 @@ def initdb(drop):
     db.create_all()
     click.echo('Initialized database.')
 
+@app.context_processor
+def inject_user():
+    user=User.query.first()
+    return dict(user=user)
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'),404
 @app.route('/')
 def index():
     user=User.query.first()
@@ -227,6 +234,7 @@ def index():
     actors=Actor_info.query.all()
     box=Movie_box.query.all()
     relation=Relation.query.all()
-    return render_template('index.html',user=user,movies_information=movies_information,actors=actors,box=box,relation=relation)
+    return render_template('index.html',movies_information=movies_information,actors=actors,box=box,relation=relation)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
