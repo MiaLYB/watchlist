@@ -11,10 +11,28 @@
         <img alt="Avatar" class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}">
         {{ user.name }}'s Watchlist
     </h2>
-    <p>{{ movies_information|length }} Titles</p>
+    <p>{{ movies_information|length }} Movies' information</p>
     <u1 class="movies_information-list">
         {% for movieinfo in movies_information %}
-        <li>{{ movieinfo.title }} - {{ movieinfo.year }}</li>
+        <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.country }} - {{ movieinfo.type }} - {{ movieinfo.year }}</li>
+        {% endfor %}
+    </u1>
+    <p>{{ actors|length }} actors' information</p>
+    <u1 class="actors-list">
+        {% for actor in actors %}
+        <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.country }}</li>
+        {% endfor %}
+    </u1>
+    <p>{{ box|length }} Box records</p>
+    <u1 class="box-list">
+        {% for b in box %}
+        <li>{{ b.movie_id }} - {{ b.box }}</li>
+        {% endfor %}
+    </u1>
+    <p>{{ relation|length }} Movie_Actor_Relation information</p>
+    <u1 class="relation-list">
+        {% for r in relation %}
+        <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}</li>
         {% endfor %}
     </u1>
     <img alt="Walking Totoro" class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}">

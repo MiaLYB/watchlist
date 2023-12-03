@@ -34,7 +34,7 @@ class User(db.Model):
 class Movie_info(db.Model):
     movie_id=db.Column(db.Integer,primary_key=True)
     movie_name=db.Column(db.String(60))
-    release_date=db.Column(db.Date)
+    release_date=db.Column(db.String(12))
     country=db.Column(db.String(10))
     type=db.Column(db.String(10))
     year=db.Column(db.Integer)
@@ -224,7 +224,9 @@ def initdb(drop):
 def index():
     user=User.query.first()
     movies_information=Movie_info.query.all()
-
-    return render_template('index.html',user=user,movies_information=movies_information)
+    actors=Actor_info.query.all()
+    box=Movie_box.query.all()
+    relation=Relation.query.all()
+    return render_template('index.html',user=user,movies_information=movies_information,actors=actors,box=box,relation=relation)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
