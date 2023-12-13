@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Edit item</h3>
+<form method="post">
+    Id <input type="text" name="id" autocomplete="off" required value="{{ relations.id }}">
+    Movie_id <input type="text" name="movie_id" autocomplete="off" required value="{{ relations.movie_id }}">
+    Actor_id <input type="text" name="actor_id" autocomplete="off" required value="{{ relations.actor_id }}">
+    Relation_type <input type="text" name="relation_type" autocomplete="off" required value="{{ relations.relation_type }}">
+    <input class="btn" type="submit" name="submit" value="Update">
+</form>
+{% endblock %}

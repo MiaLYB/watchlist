@@ -1,35 +1,107 @@
 {% extends 'base.html' %}
 {% block content %}
 <p>{{ movies_information|length }} Movies' information</p>
+<form method="post">
+    <ul class="add_info-list">
+        <li>
+            Movie_id <input type="text"name="movie_id"autocomplete="off"required>
+            Name <input type="text" name="movie_name"autocomplete="off"required>
+            Release_date <input type="text" name="release_date"autocomplete="off"required>
+        </li>
+        <li>
+            Movie_country <input type="text"name="movie_country"autocomplete="off"required>
+            Type <input type="text"name="type"autocomplete="off"required>
+            Year <input type="text"name="year"autocomplete="off"required>
+            <input class="btn"type="submit"name="submit"value="Add">
+        </li>
+    </ul>
+</form>
 <ul class="movies_information-list">
     {% for movieinfo in movies_information %}
-    <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.country }} - {{ movieinfo.type }} - {{ movieinfo.year }}
+    <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.movie_country }} - {{ movieinfo.type }} - {{ movieinfo.year }}
         <span class="float-right">
+           <a class="btn" href="{{ url_for('m_edit',movie_id=movieinfo.movie_id) }}">Edit</a>
+           <form class="inline-form"method="post"action="{{ url_for('m_delete',movie_id=movieinfo.movie_id) }}">
+               <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
+           </form>
            <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{movieinfo.movie_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
 </ul>
 <p>{{ actors|length }} actors' information</p>
+<form method="post">
+    <ul class="add_info-list">
+        <li>
+            Actor_id <input type="text"name="actor_id"autocomplete="off"required>
+            Actor_name <input type="text" name="actor_name"autocomplete="off"required>
+        </li>
+        <li>
+            Gender <input type="text"name="gender"autocomplete="off"required>
+            Actor_country <input type="text"name="actor_country"autocomplete="off"required>
+            <input class="btn"type="submit"name="submit"value="Add">
+        </li>
+    </ul>
+</form>
 <ul class="actors-list">
     {% for actor in actors %}
-    <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.country }}
-     <span class="float-right">
+    <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.actor_country }}
+        <span class="float-right">
+            <a class="btn" href="{{ url_for('a_edit',actor_id=actor.actor_id) }}">Edit</a>
+            <form class="inline-form"method="post"action="{{ url_for('a_delete',actor_id=actor.actor_id) }}">
+               <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
+            </form>
             <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{actor.actor_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
 </ul>
 <p>{{ box|length }} Box records</p>
+<form method="post">
+    <ul class="add_info-list">
+        <li>
+            Movie_id <input type="text" name="movie_id"autocomplete="off"required>
+            Box <input type="text"name="box"autocomplete="off"required>
+            <input class="btn"type="submit"name="submit"value="Add">
+        </li>
+    </ul>
+</form>
 <ul class="box-list">
     {% for b in box %}
-    <li>{{ b.movie_id }} - {{ b.box }}</li>
+    <li>{{ b.movie_id }} - {{ b.box }}
+        <span class="float-right">
+            <a class="btn" href="{{ url_for('b_edit',movie_id=b.movie_id) }}">Edit</a>
+            <form class="inline-form"method="post"action="{{ url_for('b_delete',movie_id=b.movie_id) }}">
+               <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
+            </form>
+        </span>
+    </li>
     {% endfor %}
 </ul>
 <p>{{ relation|length }} Movie_Actor_Relation information</p>
+<form method="post">
+    <ul class="add_info-list">
+        <li>
+            Id <input type="text"name="id"autocomplete="off"required>
+            Movie_id <input type="text" name="movie_id"autocomplete="off"required>
+        </li>
+        <li>
+            Actor_id <input type="text"name="actor_id"autocomplete="off"required>
+            Relation_type <input type="text"name="relation_type"autocomplete="off"required>
+            <input class="btn"type="submit"name="submit"value="Add">
+        </li>
+    </ul>
+</form>
 <ul class="relation-list">
     {% for r in relation %}
-    <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}</li>
+    <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}
+        <span class="float-right">
+            <form class="inline-form"method="post"action="{{ url_for('r_delete',id=r.id) }}">
+               <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
+            </form>
+            <a class="btn" href="{{ url_for('r_edit',id=r.id) }}">Edit</a>
+        </span>
+    </li>
     {% endfor %}
 </ul>
 <img alt="Walking Totoro" class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}"title="to~to~ro~">

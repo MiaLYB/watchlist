@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Edit item</h3>
+<form method="post">
+    Movie_id <input type="text" name="movie_id" autocomplete="off" required value="{{ movies_info.movie_id }}">
+    Movie_name <input type="text" name="movie_name" autocomplete="off" required value="{{ movies_info.movie_name }}">
+    Release_date <input type="text" name="release_date" autocomplete="off" required value="{{ movies_info.release_date }}">
+    Movie_country <input type="text" name="release_date" autocomplete="off" required value="{{ movies_info.movie_country }}">
+    Type <input type="text" name="type" autocomplete="off" required value="{{ movies_info.type }}">
+    Year <input type="text" name="year" autocomplete="off" required value="{{ movies_info.year }}">
+    <input class="btn" type="submit" name="submit" value="Update">
+</form>
+{% endblock %}
