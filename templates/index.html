@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <p>{{ movies_information|length }} Movies' information</p>
+<!-- 在模板中可以直接使用current_user变量 -->
+{% if current_user.is_authenticated %}
 <form method="post">
     <ul class="add_info-list">
         <li>
@@ -16,20 +18,25 @@
         </li>
     </ul>
 </form>
+{% endif %}
 <ul class="movies_information-list">
     {% for movieinfo in movies_information %}
     <li>{{ movieinfo.movie_id }} - {{ movieinfo.movie_name }} - {{ movieinfo.release_date }} - {{ movieinfo.movie_country }} - {{ movieinfo.type }} - {{ movieinfo.year }}
         <span class="float-right">
+            {% if current_user.is_authenticated %}
            <a class="btn" href="{{ url_for('m_edit',movie_id=movieinfo.movie_id) }}">Edit</a>
            <form class="inline-form"method="post"action="{{ url_for('m_delete',movie_id=movieinfo.movie_id) }}">
                <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
            </form>
+            {% endif %}
            <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{movieinfo.movie_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
 </ul>
 <p>{{ actors|length }} actors' information</p>
+<!-- 在模板中可以直接使用current_user变量 -->
+{% if current_user.is_authenticated %}
 <form method="post">
     <ul class="add_info-list">
         <li>
@@ -43,20 +50,25 @@
         </li>
     </ul>
 </form>
+{% endif %}
 <ul class="actors-list">
     {% for actor in actors %}
     <li>{{ actor.actor_id }} - {{ actor.actor_name }} - {{ actor.gender }} - {{ actor.actor_country }}
         <span class="float-right">
+            {% if current_user.is_authenticated %}
             <a class="btn" href="{{ url_for('a_edit',actor_id=actor.actor_id) }}">Edit</a>
             <form class="inline-form"method="post"action="{{ url_for('a_delete',actor_id=actor.actor_id) }}">
                <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
             </form>
+            {% endif %}
             <a class="豆瓣"href="https://movie.douban.com/subject_search?search_text={{actor.actor_name}}"target="_blank"title="在豆瓣上查看更多信息">豆瓣</a>
         </span>
     </li>
     {% endfor %}
 </ul>
 <p>{{ box|length }} Box records</p>
+<!-- 在模板中可以直接使用current_user变量 -->
+{% if current_user.is_authenticated %}
 <form method="post">
     <ul class="add_info-list">
         <li>
@@ -66,19 +78,24 @@
         </li>
     </ul>
 </form>
+{% endif %}
 <ul class="box-list">
     {% for b in box %}
     <li>{{ b.movie_id }} - {{ b.box }}
         <span class="float-right">
+            {% if current_user.is_authenticated %}
             <a class="btn" href="{{ url_for('b_edit',movie_id=b.movie_id) }}">Edit</a>
             <form class="inline-form"method="post"action="{{ url_for('b_delete',movie_id=b.movie_id) }}">
                <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
             </form>
+            {% endif %}
         </span>
     </li>
     {% endfor %}
 </ul>
 <p>{{ relation|length }} Movie_Actor_Relation information</p>
+<!-- 在模板中可以直接使用current_user变量 -->
+{% if current_user.is_authenticated %}
 <form method="post">
     <ul class="add_info-list">
         <li>
@@ -92,14 +109,17 @@
         </li>
     </ul>
 </form>
+{% endif %}
 <ul class="relation-list">
     {% for r in relation %}
     <li>{{ r.id }} - {{ r.movie_id }} - {{ r.actor_id }} - {{ r.relation_type }}
         <span class="float-right">
+            {% if current_user.is_authenticated %}
+            <a class="btn" href="{{ url_for('r_edit',id=r.id) }}">Edit</a>
             <form class="inline-form"method="post"action="{{ url_for('r_delete',id=r.id) }}">
                <input class="btn"type="submit"name="delete"value="Delete"onclick="return confirm('Are you sure?')">
             </form>
-            <a class="btn" href="{{ url_for('r_edit',id=r.id) }}">Edit</a>
+            {% endif %}
         </span>
     </li>
     {% endfor %}

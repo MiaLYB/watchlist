@@ -17,7 +17,7 @@ import pip
 #@app.route('/user/<name>')
 #def user_page(name):
 #   return 'User:%s' % name
-
+from werkzeug.security import generate_password_hash,check_password_hash
 from flask import Flask,render_template,url_for,redirect,flash,request
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -27,10 +27,20 @@ app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///'+os.path.join(app.root_path,'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.config.from_object(Config)
+app.config['SECRET_KEY'] = 'dev'
 db=SQLAlchemy(app)
-class User(db.Model):
-    id=db.Column(db.String(4),primary_key=True)
+from flask_login import UserMixin
+class User(db.Model,UserMixin):
+    id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(20))
+    username=db.Column(db.String(20))
+    passsword_hash=db.Column(db.String(128))
+
+    def set_password(self,password):
+        self.passsword_hash=generate_password_hash(password)
+
+    def validate_password(self,password):
+        return check_password_hash(self.passsword_hash,password)
 class Movie_info(db.Model):
     movie_id=db.Column(db.String(4),primary_key=True)
     movie_name=db.Column(db.String(60))
@@ -53,6 +63,59 @@ class Movie_box(db.Model):
     box=db.Column(db.String(10))
 
 import click
+@app.cli.command()
+@click.option('--username',prompt=True,help='The username used to login.')
+@click.option('--password',prompt=True,hide_input=False,confirmation_prompt=True,help='The password used to login.')
+def admin(username,password):
+    """Create user."""
+    db.create_all()
+
+    user=User.query.first()
+    if user is not None:
+        click.echo('Updating user...')
+        user.username=username
+        user.set_password(password)
+    else:
+        click.echo('Creating user...')
+        user=User(username=username,name='Admin')
+        user.set_password(password)
+        db.session.add(user)
+
+    db.session.commit()
+    click.echo('Done.')
+
+from flask_login import LoginManager
+login_manager=LoginManager(app)
+login_manager.login_view='login'
+@login_manager.user_loader
+def load_user(user_id):
+    user=User.query.get(int(user_id))
+    return user
+from flask_login import login_user
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if request.method=='POST':
+        username=request.form['username']
+        password=request.form['password']
+        if not username or not password:
+            flash('Invalid input.')
+            return redirect(url_for('login'))
+        user=User.query.first()
+        if username==user.username and user.validate_password(password):
+            login_user(user)
+            flash('Login success.')
+            return redirect(url_for('index'))
+        flash('Invalid username or password.')
+        return redirect(url_for('login'))
+    return render_template('login.html')
+from flask_login import login_required,logout_user
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Goodbye.')
+    return redirect(url_for('index'))
+
 @app.cli.command()
 def forge():
     """Generate fake data."""
@@ -193,7 +256,7 @@ def forge():
               {'id':'52', 'movie_id':'1018', 'actor_id':'2019', 'relation_type':'主演'},
               {'id':'53', 'movie_id':'1018', 'actor_id':'2041', 'relation_type':'主演'},
               ]
-    user=User(id='1',name=name)
+    user=User(name=name)
     db.session.add(user)
     for m in movies_information:
         movie_info=Movie_info(movie_id=m['movie_id'],movie_name=m['movie_name'],release_date=m['release_date'],movie_country=m['movie_country'],type=m['type'],year=m['year'])
@@ -227,10 +290,12 @@ def inject_user():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'),404
-
+from flask_login import login_required,current_user
 @app.route('/',methods=['GET','POST'])
 def index():
     if request.method=='POST':
+        if not request.method=='POST':
+            return redirect(url_for('index'))
         movie_id=request.form.get('movie_id')
         movie_name=request.form.get('movie_name')
         release_date=request.form.get('release_date')
@@ -244,18 +309,34 @@ def index():
         box=request.form.get('box')
         id=request.form.get('id')
         relation_type=request.form.get('relation_type')
-        if not movie_id or not movie_name or not release_date or not movie_country or not type or not year or not actor_id or not actor_name or not gender or not actor_country or not box or not id or not relation_type or len(movie_id)>4 or len(movie_name)>60 or len(release_date)>12 or len(movie_country)>10 or len(type)>10 or len(year)>10 or len(actor_id)>4 or len(actor_name)>30 or len(gender)>10 or len(actor_country)>20  or len(id)>4 or len(relation_type)>10 or len(box)>10:
-            flash('Invalid input.')
-            return redirect(url_for('index'))
-        movie_info=Movie_info(movie_id=movie_id,movie_name=movie_name,movie_country=movie_country,release_date=release_date,type=type,tear=year)
-        actor=Actor_info(actor_id=actor_id,actor_name=actor_name,actor_country=actor_country,gender=gender)
-        box=Movie_box(movie_id=movie_id,box=box)
-        relation=Relation(id=id,movie_id=movie_id,actor_id=actor_id,relation_type=relation_type)
-        db.session.add(movie_info)
-        db.session.add(actor)
-        db.session.add(box)
-        db.session.add(relation)
-        db.session.commit()
+        if movie_id is not None and movie_name is not None and release_date is not None and movie_country is not None and type is not None and year is not None:
+            if len(movie_id)>4 or len(movie_name)>60 or len(release_date)>12 or len(movie_country)>10 or len(type)>10 or len(year)>10:
+                flash('Invalid input.')
+                return redirect(url_for('index'))
+            movie_info=Movie_info(movie_id=movie_id,movie_name=movie_name,movie_country=movie_country,release_date=release_date,type=type,year=year)
+            db.session.add(movie_info)
+            db.session.commit()
+        if actor_id is not None and actor_name is not None and gender is not None and actor_country is not None:
+            if len(actor_id)>4 or len(actor_name)>30 or len(gender)>10 or len(actor_country)>20:
+                flash('Invalid input.')
+                return redirect(url_for('index'))
+            actor=Actor_info(actor_id=actor_id,actor_name=actor_name,actor_country=actor_country,gender=gender)
+            db.session.add(actor)
+            db.session.commit()
+        if movie_id is not None and box is not None:
+            if len(movie_id)>4 or len(box)>10:
+                flash('Invalid input.')
+                return redirect(url_for('index'))
+            box=Movie_box(movie_id=movie_id,box=box)
+            db.session.add(box)
+            db.session.commit()
+        if id is not None and actor_id is not None and movie_id is not None and relation_type is not None:
+            if len(id)>4 or len(movie_id)>4 or len(actor_id)>4 or len(relation_type)>10:
+                flash('Invalid input.')
+                return redirect(url_for('index'))
+            relation=Relation(id=id,movie_id=movie_id,actor_id=actor_id,relation_type=relation_type)
+            db.session.add(relation)
+            db.session.commit()
         flash('Item created.')
         return redirect(url_for('index'))
     user=User.query.first()
@@ -265,7 +346,22 @@ def index():
     relation=Relation.query.all()
     return render_template('index.html',user=user,movies_information=movies_information,actors=actors,box=box,relation=relation)
 
+@app.route('/settings',methods=['GET','POST'])
+@login_required
+def settings():
+    if request.method=='POST':
+        name=request.form['name']
+        if not name or len(name)>20:
+            flash('Invalid input')
+            return redirect(url_for('settings'))
+        current_user.name=name
+        db.session.commit()
+        flash('Settings updated.')
+        return redirect(url_for('index'))
+    return render_template('settings.html')
+
 @app.route('/movies_info/m_edit/<int:movie_id>',methods=['GET','POST'])
+@login_required
 def m_edit(movie_id):
     movies_info = Movie_info.query.get_or_404(movie_id)
     if request.method=='POST':
@@ -291,6 +387,7 @@ def m_edit(movie_id):
         return redirect(url_for('index'))
     return render_template('m_edit.html',movies_info=movies_info)
 @app.route('/actors_info/a_edit/<int:actor_id>',methods=['GET','POST'])
+@login_required
 def a_edit(actor_id):
     actors_info = Actor_info.query.get_or_404(actor_id)
     if request.method=='POST':
@@ -310,6 +407,7 @@ def a_edit(actor_id):
         return redirect(url_for('index'))
     return render_template('a_edit.html',actors_info=actors_info)
 @app.route('/relations/r_edit/<int:id>',methods=['GET','POST'])
+@login_required
 def r_edit(id):
     relations = Relation.query.get_or_404(id)
     if request.method=='POST':
@@ -329,6 +427,7 @@ def r_edit(id):
         return redirect(url_for('index'))
     return render_template('r_edit.html',relations=relations)
 @app.route('/boxes/b_edit/<int:movie_id>',methods=['GET','POST'])
+@login_required
 def b_edit(movie_id):
     boxes = Movie_box.query.get_or_404(movie_id)
     if request.method=='POST':
@@ -343,28 +442,32 @@ def b_edit(movie_id):
         flash('Item updated.')
         return redirect(url_for('index'))
     return render_template('b_edit.html',boxes=boxes)
-@app.route('/movies_info/m_delete/<int:movie_id>')
+@app.route('/movies_info/m_delete/<int:movie_id>',methods=['POST'])
+@login_required
 def m_delete(movie_id):
     movies_info=Movie_info.query.get_or_404(movie_id)
     db.session.delete(movies_info)
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))
-@app.route('/actors_info/a_delete/<int:actor_id>')
+@app.route('/actors_info/a_delete/<int:actor_id>',methods=['POST'])
+@login_required
 def a_delete(actor_id):
     actors_info=Actor_info.query.get_or_404(actor_id)
     db.session.delete(actors_info)
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))
-@app.route('/relations/r_delete/<int:id>')
+@app.route('/relations/r_delete/<int:id>',methods=['POST'])
+@login_required
 def r_delete(id):
     relations=Relation.query.get_or_404(id)
     db.session.delete(relations)
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))
-@app.route('/boxes/b_delete/<int:movie_id>')
+@app.route('/boxes/b_delete/<int:movie_id>',methods=['POST'])
+@login_required
 def b_delete(movie_id):
     boxes=Movie_box.query.get_or_404(movie_id)
     db.session.delete(boxes)
@@ -372,6 +475,5 @@ def b_delete(movie_id):
     flash('Item deleted.')
     return redirect(url_for('index'))
 
-app.config['SECRET_KEY']='dev'
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
