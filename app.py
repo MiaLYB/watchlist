@@ -371,11 +371,10 @@ def m_edit(movie_id):
         movie_country = request.form.get('movie_country')
         type = request.form.get('type')
         year = request.form.get('year')
-        if not movie_id or not movie_name or not release_date or not movie_country or not type or not year or len(
-            movie_id) > 4 or len(movie_name) > 60 or len(release_date) > 12 or len(movie_country) > 10 or len(
-            type) > 10 or len(year) > 10:
-            flash('Invalid input.')
-            return redirect(url_for('m_edit',movie_id=movie_id))
+        if movie_id is not None and movie_name is not None and release_date is not None and movie_country is not None and type is not None and year is not None:
+            if len(movie_id) > 4 or len(movie_name) > 60 or len(release_date) > 12 or len(movie_country) > 10 or len(type) > 10 or len(year) > 10:
+                flash('Invalid input.')
+                return redirect(url_for('m_edit',movie_id=movie_id))
         movies_info.movie_id=movie_id
         movies_info.movie_name=movie_name
         movies_info.release_date=release_date
@@ -395,9 +394,10 @@ def a_edit(actor_id):
         actor_name = request.form.get('actor_name')
         gender = request.form.get('gender')
         actor_country = request.form.get('actor_country')
-        if not actor_id or not actor_name or not gender or not actor_country or len(actor_id)>4 or len(actor_name)>30 or len(gender)>10 or len(actor_country)>20:
-            flash('Invalid input.')
-            return redirect(url_for('a_edit',actor_id=actor_id))
+        if actor_id is not None and actor_name is not None and gender is not None and actor_country is not None:
+            if len(actor_id)>4 or len(actor_name)>30 or len(gender)>10 or len(actor_country)>20:
+                flash('Invalid input.')
+                return redirect(url_for('a_edit',actor_id=actor_id))
         actors_info.actor_id=actor_id
         actors_info.actor_name=actor_name
         actors_info.gender=gender
@@ -415,9 +415,10 @@ def r_edit(id):
         movie_id=request.form.get('movie_id')
         actor_id=request.form.get('actor_id')
         relation_type = request.form.get('relation_type')
-        if not id or not movie_id or not actor_id or not relation_type or len(id)>4 or len(movie_id)>4 or len(actor_id)>4 or len(relation_type)>10:
-            flash('Invalid input.')
-            return redirect(url_for('r_edit',id=id))
+        if id is not None and actor_id is not None and movie_id is not None and relation_type is not None:
+            if len(id)>4 or len(movie_id)>4 or len(actor_id)>4 or len(relation_type)>10:
+                flash('Invalid input.')
+                return redirect(url_for('r_edit',id=id))
         relations.id=id
         relations.movie_id=movie_id
         relations.actor_id=actor_id
@@ -433,9 +434,10 @@ def b_edit(movie_id):
     if request.method=='POST':
         movie_id=request.form.get('movie_id')
         box = request.form.get('box')
-        if not movie_id or not box or len(movie_id)>4 or len(box)>10:
-            flash('Invalid input.')
-            return redirect(url_for('b_edit',movie_id=movie_id))
+        if movie_id is not None and box is not None:
+            if len(movie_id)>4 or len(box)>10:
+                flash('Invalid input.')
+                return redirect(url_for('b_edit',movie_id=movie_id))
         boxes.movie_id=movie_id
         boxes.box=box
         db.session.commit()
