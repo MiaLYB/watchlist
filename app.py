@@ -35,10 +35,8 @@ class User(db.Model,UserMixin):
     name=db.Column(db.String(20))
     username=db.Column(db.String(20))
     passsword_hash=db.Column(db.String(128))
-
     def set_password(self,password):
         self.passsword_hash=generate_password_hash(password)
-
     def validate_password(self,password):
         return check_password_hash(self.passsword_hash,password)
 class Movie_info(db.Model):
@@ -69,7 +67,6 @@ import click
 def admin(username,password):
     """Create user."""
     db.create_all()
-
     user=User.query.first()
     if user is not None:
         click.echo('Updating user...')
@@ -80,7 +77,6 @@ def admin(username,password):
         user=User(username=username,name='Admin')
         user.set_password(password)
         db.session.add(user)
-
     db.session.commit()
     click.echo('Done.')
 
